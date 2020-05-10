@@ -8,8 +8,8 @@
             <ul>
                 <!--不能使用80端口，否则会出现502网关故障-->
                 <div class="avatar"> <img th:src="${@module.get('sysConfig').SITE_PERSON_PIC}" alt=""></div>
-                <p th:text="${@module.get('sysConfig').SITE_PERSON_NAME}" class="abname"></p>
-                <p th:text="${@module.get('sysConfig').SITE_PERSON_DESC}" class="abtext"></p>
+                <p th:text="${@module.get('sysConfig').SITE_NAME}" class="abname"></p>
+                <p th:text="${@module.get('sysConfig').SITE_KWD}" class="abtext"></p>
             </ul>
         </div>
     </div>
@@ -26,7 +26,7 @@
     <div class="zb-sidebar-tabs">
         <ul id="myTab" class="nav nav-tabs">
             <li class="active"><a href="#latest" data-toggle="tab">最新文章</a></li>
-            <li><a href="#recommend" data-toggle="tab">老毛推荐</a></li>
+            <li><a href="#recommend" data-toggle="tab">今日推荐</a></li>
             <li><a href="#hot" data-toggle="tab">热门排行</a></li>
         </ul>
         <div class="tab-content">
