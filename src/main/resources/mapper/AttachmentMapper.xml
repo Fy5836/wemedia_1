@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wemedia.mapper.AttachmentMapper" >
+  <resultMap id="BaseResultMap" type="com.wemedia.model.Attachment" >
+    <id column="attachment_id" property="attachmentId" jdbcType="INTEGER" />
+    <result column="attachment_name" property="attachmentName" jdbcType="VARCHAR" />
+    <result column="attachment_path" property="attachmentPath" jdbcType="VARCHAR" />
+    <result column="attachment_shuffix" property="attachmentShuffix" jdbcType="VARCHAR" />
+    <result column="attachment_size" property="attachmentSize" jdbcType="VARCHAR" />
+    <result column="model" property="model" jdbcType="VARCHAR" />
+    <result column="upload_time" property="uploadTime" jdbcType="TIMESTAMP" />
+    <result column="article_id" property="articleId" jdbcType="INTEGER" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+        attachment_id,attachment_name,attachment_path,attachment_shuffix,attachment_size,model,upload_time,article_id
+  </sql>
+
+  <select id="selectByArticleId" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> FROM attachment WHERE article_id = #{id}
+  </select>
+</mapper>

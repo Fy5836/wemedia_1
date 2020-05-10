@@ -1,0 +1,208 @@
+<section class="content-header">
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">网站管理</a></li>
+        <li class="active">校历安排</li>
+    </ol>
+</section>
+<section class="content">
+    <div class="jax-box">
+        <form id="formSearch" class="form-horizontal form-search">
+            <div class="form-group">
+                <div class="col-md-3 col-sm-6">
+                    <label class="control-label  col-xs-4" for="event">事件安排:</label>
+                    <div class="col-xs-8">
+                        <input type="text" class="form-control" id="event">
+                    </div>
+                </div>
+
+                <shiro:hasPermission name="plan:list">
+                    <div class="col-md-1 col-sm-6 " style="text-align:left;">
+                        <button type="button" id="btn_query" class="btn btn-info">查询</button>
+                    </div>
+                </shiro:hasPermission>
+            </div>
+        </form>
+    </div>
+    <div class="jax-box jax-box-table">
+        <div id="toolbar" class="btn-group">
+            <shiro:hasPermission name="inform:add">
+                <button id="btn_add" type="button" class="btn btn-primary" data-toggle="modal" data-target="#linkModal">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>发布安排
+                </button>
+            </shiro:hasPermission>
+        </div>
+        <table id="table"></table>
+    </div>
+</section>
+<!-- 友链新增模态框 -->
+<div id="linkModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog"  role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">发布安排</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="linkForm">
+                    <input  name="origin" type="hidden" value="1">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label">事件<span class="red">*</span>:</label>
+                            <div class="col-sm-8">
+                                <input  name="event" class="form-control" require="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label">开始日期<span class="red">*</span>:</label>
+                            <div class="col-sm-8">
+                                <input placeholder="格式：2000-01-01"  name="begintime" class="form-control" require="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label">结束日期 <span class="red">*</span>:</label>
+                            <div class="col-sm-8">
+                                <input placeholder="格式：2000-01-01" name="endtime" class="form-control" require="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label">相关细节 <span class="red">*</span>:</label>
+                            <div class="col-sm-8">
+                                <input name="detail" class="form-control" require="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label">发布人 <span class="red">*</span>:</label>
+                            <div class="col-sm-8">
+                                <input name="publishuser" class="form-control" require="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <div class="pull-right">
+                            <button type="button" id="saveLink" class="btn btn-info">确定</button>
+                            <button type="button" data-dismiss="modal" class="btn btn-default">取消</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="linkDetailModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">校历安排信息</h4>
+            </div>
+            <div class="modal-body">
+                <div id="linkOpenWindow">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var editFlag = "[[${@perms.hasPerm('plan:edit')}]]";
+    var deleteFlag = "[[${@perms.hasPerm('plan:delete')}]]";
+    var columns = [
+        {
+            field: 'event',
+            title: '安排事件',
+            align : "center"
+        },{
+            field: 'begintime',
+            title: '开始日期',
+            align : "center"
+        },{
+            field: 'endtime',
+            title: '结束日期',
+            align : "center",
+        },{
+            field: 'detail',
+            title: '相关细节',
+            align : "center",
+        },{
+            field: 'publishuser',
+            title: '发布人',
+            align : "center",
+        },
+        {
+            field : 'operation',
+            title : '操作',
+            align : "center",
+            class:'min-width-100',
+            formatter : function(value,
+                                 row, index) {
+                var edit = editFlag=="true" ? '<a class="table-btn table-btn-info" onclick="editLink('+row.id+')">编辑</a>' : '';
+                var del = deleteFlag=="true" ? '<a  class="table-btn table-btn-danger" onclick="deleteLink('+row.id+')">删除</a>' : '';
+                return edit + del;
+            }
+        }];
+    var options={
+        id:"#table",
+        url:'/plan/list',
+        columns: columns,
+        toolbar: '#toolbar',
+        showRefresh: true,
+        queryParams : queryParams
+    }
+    Core.initTable(options);
+
+    /*查询参数*/
+    function queryParams(params) {
+        var temp = { //这里的键的名字和控制器的变量名必须一致，这边改动，控制器也需要改成一样的
+            limit : params.limit, //页面大小
+            offset : params.offset, //页码
+            event : $("#event").val()
+        };
+        return temp;
+    }
+
+    /*编辑*/
+    function editLink(id) {
+        Core.load("#linkOpenWindow","/plan/edit?id="+id,function(){
+            $("#linkDetailModal").modal("show");
+        },2);
+    }
+    /*删除*/
+    function deleteLink(id) {
+        Core.confirm("确定删除该安排？",function () {
+            Core.postAjax("/plan/delete",{"id":id},function (data) {
+                if(data.status==200){
+                    Core.refreshTable("#table");
+                }
+                layer.msg(data.msg);
+            })
+        })
+    }
+    $(function () {
+        /*查询*/
+        $("#btn_query").click(function(){
+            Core.refreshTable("#table");
+        });
+        /*新增*/
+        $("#btn_add").click(function(){
+            Core.clearError("#linkForm");
+        });
+
+        /*保存*/
+        $("#saveLink").click(function(){
+            if(doValidForm("#linkForm")){
+                Core.mask("#saveLink");
+                Core.postAjax("/plan/add",$("#linkForm").serialize(),function (data) {
+                    Core.unmask("#saveLink");
+                    if(data.status==200){
+                        $("#linkModal").modal("hide");
+                        $("#linkForm")[0].reset();
+                        Core.refreshTable("#table");
+                    }
+                    layer.msg(data.msg);
+                })
+            };
+        });
+    });
+
+</script>

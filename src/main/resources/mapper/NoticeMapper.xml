@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wemedia.mapper.NoticeMapper">
+    <resultMap id="BaseResultMap" type="com.wemedia.model.Notice">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="time" property="time" jdbcType="TIMESTAMP"/>
+        <result column="pubuser" property="pubuser" jdbcType="VARCHAR"/>
+        <result column="top" property="top" jdbcType="BIT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id,title,content,time,pubuser,top
+  </sql>
+
+    <select id="selectNotices" resultMap="BaseResultMap" parameterType="com.wemedia.model.Notice">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM notice
+        WHERE 1 = 1
+        <if test="title !=null and title != ''">
+            and title LIKE concat('%', #{title}, '%')
+        </if>
+        <if test="content !=null and content != ''">
+            and content like concat('%', #{content}, '%')
+        </if>
+        <if test="pubuser !=null and pubuser != ''">
+            and pubuser like concat('%', #{pubuser}, '%')
+        </if>
+        ORDER BY top = 1 DESC ,time DESC
+    </select>
+
+    <select id="selectByNoticeId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM notice WHERE id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="NoticesForWeek" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM notice WHERE time >= DATE_SUB(CURDATE(), INTERVAL 1 WEEK)
+        ORDER BY top = 1 DESC ,time DESC
+    </select>
+
+    <update id="updateByNoticeId" parameterType="com.wemedia.model.Notice">
+        update notice SET title=#{title},content=#{content},top=#{top},time = now() WHERE id = #{id}
+   </update>
+
+</mapper>

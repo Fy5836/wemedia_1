@@ -1,0 +1,114 @@
+<section class="content-header">
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">日志管理</a></li>
+        <li class="active">系统日志</li>
+    </ol>
+</section>
+<section class="content">
+    <div class="jax-box">
+        <form id="formSearch" class="form-horizontal form-search">
+            <div class="form-group">
+                <div class="col-md-3 col-sm-6">
+                    <label class="control-label  col-xs-4" for="username">用户昵称:</label>
+                    <div class="col-xs-8">
+                        <input type="text" class="form-control" id="username">
+                    </div>
+                </div>
+                <shiro:hasPermission name="log:list">
+                    <div class="col-md-1 col-sm-6 " style="text-align:left;">
+                        <button type="button" id="btn_query" class="btn btn-info">查询</button>
+                    </div>
+                </shiro:hasPermission>
+            </div>
+        </form>
+    </div>
+    <div class="jax-box jax-box-table">
+        <table id="table"></table>
+    </div>
+</section>
+
+<script>
+    var columns = [
+        {
+            field: 'id',
+            title: '日志ID',
+            align : "center"
+        },{
+            field: 'username',
+            title: '用户名',
+            align : "center",
+        },{
+            field: 'ip',
+            title: '用户IP',
+            align : "center",
+        },{
+            field: 'time',
+            title: '登录时间',
+            align : "center",
+        }];
+    var options={
+        id:"#table",
+        url:'/log/list',
+        columns: columns,
+        toolbar: '#toolbar',
+        showRefresh: true,
+        queryParams : queryParams
+    }
+    Core.initTable(options);
+
+    /*查询参数*/
+    function queryParams(params) {
+        var temp = { //这里的键的名字和控制器的变量名必须一致，这边改动，控制器也需要改成一样的
+            limit : params.limit, //页面大小
+            offset : params.offset, //页码
+            username : $("#username").val()
+        };
+        return temp;
+    }
+
+    /*编辑*/
+    function editLink(id) {
+        Core.load("#linkOpenWindow","/inform/edit?id="+id,function(){
+            $("#linkDetailModal").modal("show");
+        },2);
+    }
+    /*删除*/
+    function deleteLink(id) {
+        Core.confirm("确定删除该公告信息？",function () {
+            Core.postAjax("/inform/delete",{"id":id},function (data) {
+                if(data.status==200){
+                    Core.refreshTable("#table");
+                }
+                layer.msg(data.msg);
+            })
+        })
+    }
+    $(function () {
+        /*查询*/
+        $("#btn_query").click(function(){
+            Core.refreshTable("#table");
+        });
+        /*新增*/
+        $("#btn_add").click(function(){
+            Core.clearError("#linkForm");
+        });
+
+        /*保存*/
+        $("#saveLink").click(function(){
+            if(doValidForm("#linkForm")){
+                Core.mask("#saveLink");
+                Core.postAjax("/inform/add",$("#linkForm").serialize(),function (data) {
+                    Core.unmask("#saveLink");
+                    if(data.status==200){
+                        $("#linkModal").modal("hide");
+                        $("#linkForm")[0].reset();
+                        Core.refreshTable("#table");
+                    }
+                    layer.msg(data.msg);
+                })
+            };
+        });
+    });
+
+</script>

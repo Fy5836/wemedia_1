@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wemedia.mapper.BizDislikeMapper" >
+  <resultMap id="mao" type="com.wemedia.model.BizDislike" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="dis_id" property="disId" jdbcType="INTEGER" />
+    <result column="dis_type" property="disType" jdbcType="BIT" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="user_ip" property="userIp" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="BIT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List">
+		id,
+		dis_id,
+		dis_type,
+		user_id,
+		user_ip,
+		status,
+		create_time,
+		update_time
+   </sql>
+  <select id="checkDislike" resultMap="mao">
+    SELECT <include refid="Base_Column_List"/>
+    FROM biz_dislike
+    WHERE dis_id=#{disId}
+    AND user_ip=#{userIp}
+  </select>
+</mapper>

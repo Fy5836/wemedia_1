@@ -1,0 +1,59 @@
+<form class="form-horizontal" id="linkDetailForm">
+    <input name="id" type="hidden" th:value="${calendar.id}">
+    <div class="box-body">
+        <div class="form-group">
+            <label  class="col-sm-3 control-label">事件 <span class="red">*</span>:</label>
+            <div class="col-sm-8">
+                <input th:value="${calendar.event}" name="event" class="form-control" require="">
+            </div>
+        </div>
+        <div class="form-group">
+            <label  class="col-sm-3 control-label">开始日期 <span class="red">*</span>:</label>
+            <div class="col-sm-8">
+                <input th:value="${calendar.begintime}" name="begintime" class="form-control" require="">
+            </div>
+        </div>
+        <div class="form-group">
+            <label  class="col-sm-3 control-label">结束日期 <span class="red">*</span>:</label>
+            <div class="col-sm-8">
+                <input th:value="${calendar.endtime}" name="endtime" class="form-control" require="">
+            </div>
+        </div>
+        <div class="form-group">
+            <label  class="col-sm-3 control-label">相关细节 </label>
+            <div class="col-sm-8">
+                <input th:value="${calendar.detail}" name="detail" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label  class="col-sm-3 control-label">发布人 </label>
+            <div class="col-sm-8">
+                <input th:value="${calendar.publishuser}" name="publishuser" class="form-control">
+            </div>
+        </div>
+
+    </div>
+    <div class="box-footer">
+        <div class="pull-right">
+            <button type="button" id="saveDetailLink" class="btn btn-info">确定</button>
+            <button type="button" data-dismiss="modal" class="btn btn-default">取消</button>
+        </div>
+    </div>
+</form>
+<script>
+    $(function () {
+        $("#saveDetailLink").on('click', function () {
+            if (doValidForm("#linkDetailForm")) {
+                Core.mask("#saveDetailLink");
+                Core.postAjax("/plan/edit",$("#linkDetailForm").serialize(),function (data) {
+                    if (data.status == 200) {
+                        Core.unmask("#saveDetailLink");
+                        $("#linkDetailModal").modal("hide");
+                        Core.refreshTable("#table",true);
+                    }
+                    layer.msg(data.msg);
+                })
+            }
+        });
+    });
+</script>

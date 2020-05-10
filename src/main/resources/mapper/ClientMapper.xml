@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wemedia.mapper.ClientMapper" >
+  <resultMap id="BaseResultMap" type="com.wemedia.model.Client" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <id column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="salt" property="salt" jdbcType="VARCHAR" />
+    <result column="nickname" property="nickname" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="principle" property="principle" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="age" property="age" jdbcType="VARCHAR" />
+    <result column="img" property="img" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="county" property="county" jdbcType="VARCHAR" />
+    <result column="loc" property="loc" jdbcType="VARCHAR" />
+    <result column="birth" property="birth" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="finance" property="finance" jdbcType="VARCHAR" />
+    <result column="qrCode" property="qrcode" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP" />
+    <result column="introduce" property="introduce" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+        id, user_id, username, password, salt, nickname, email, phone, principle, sex, age, img, province, city, county, loc, birth, status, finance, qrCode,
+        create_time, update_time, last_login_time, introduce
+  </sql>
+
+  <select id="selectByUsername" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> FROM client WHERE username = #{username,jdbcType=VARCHAR}
+  </select>
+
+  <select id="clientLogin" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> FROM client WHERE username = #{username,jdbcType=VARCHAR} AND password = #{password,jdbcType=VARCHAR}
+  </select>
+
+  <update id="updateStatusBatch" parameterType="map">
+    UPDATE
+    client
+    SET
+    status=#{status}, update_time=now()
+    where
+    user_id in
+    <foreach collection="userIds" item="item" index="index" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </update>
+
+
+</mapper>

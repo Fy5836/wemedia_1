@@ -1,0 +1,221 @@
+<section class="content-header">
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="#">网站管理</a></li>
+        <li class="active">公告管理</li>
+    </ol>
+</section>
+<section class="content">
+    <div class="jax-box">
+        <form id="formSearch" class="form-horizontal form-search">
+            <div class="form-group">
+                <div class="col-md-3 col-sm-6">
+                    <label class="control-label  col-xs-4" for="title">公告标题:</label>
+                    <div class="col-xs-8">
+                        <input type="text" class="form-control" id="title">
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <label class="control-label  col-xs-4" for="pubuser">发布人:</label>
+                    <div class="col-xs-8">
+                        <input type="text" class="form-control" id="pubuser">
+                    </div>
+                </div>
+                <shiro:hasPermission name="inform:list">
+                    <div class="col-md-1 col-sm-6 " style="text-align:left;">
+                        <button type="button" id="btn_query" class="btn btn-info">查询</button>
+                    </div>
+                </shiro:hasPermission>
+            </div>
+        </form>
+    </div>
+    <div class="jax-box jax-box-table">
+        <div id="toolbar" class="btn-group">
+            <shiro:hasPermission name="inform:add">
+                <button id="btn_add" type="button" class="btn btn-primary" data-toggle="modal" data-target="#linkModal">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>发布公告
+                </button>
+            </shiro:hasPermission>
+        </div>
+        <table id="table"></table>
+    </div>
+</section>
+<!-- 友链新增模态框 -->
+<div id="linkModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog"  role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">发布公告</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="linkForm">
+                    <input  name="origin" type="hidden" value="1">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="top">是否置顶: </label>
+                            <div class="col-sm-8">
+                                <label class="radio-inline pr-5"><input type="radio" name="top" value="1" checked="checked"> 置顶</label>
+                                <label class="radio-inline pr-5"><input type="radio" name="top" value="0"> 正常</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label">公告主题<span class="red">*</span>:</label>
+                            <div class="col-sm-8">
+                                <input  name="title" class="form-control" require="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label">公告内容 <span class="red">*</span>:</label>
+                            <div class="col-sm-8">
+                                <input name="content" class="form-control" require="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label">发布人 <span class="red">*</span>:</label>
+                            <div class="col-sm-8">
+                                <input name="pubuser" class="form-control" require="">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="box-footer">
+                        <div class="pull-right">
+                            <button type="button" id="saveLink" class="btn btn-info">确定</button>
+                            <button type="button" data-dismiss="modal" class="btn btn-default">取消</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="linkDetailModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">公告信息</h4>
+            </div>
+            <div class="modal-body">
+                <div id="linkOpenWindow">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var editFlag = "[[${@perms.hasPerm('inform:edit')}]]";
+    var deleteFlag = "[[${@perms.hasPerm('inform:delete')}]]";
+    var columns = [
+        {
+            field: 'id',
+            title: '公告ID',
+            align : "center"
+        },{
+            field: 'title',
+            title: '公告主题',
+            align : "center"
+        },{
+            field: 'content',
+            title: '公告内容',
+            align : "center",
+        },{
+            field: 'time',
+            title: '发布时间',
+            align : "center",
+        },{
+            field: 'pubuser',
+            title: '发布人',
+            align : "center",
+        },{
+            field: 'top',
+            title: '是否置顶',
+            align : "center",
+            formatter : function(value) {
+                if(value==0){
+                    return '正常'
+                }else if(value==1){
+                    return '置顶'
+                }
+            }
+        },
+        {
+            field : 'operation',
+            title : '操作',
+            align : "center",
+            class:'min-width-100',
+            formatter : function(value,
+                                 row, index) {
+                var edit = editFlag=="true" ? '<a class="table-btn table-btn-info" onclick="editLink('+row.id+')">编辑</a>' : '';
+                var del = deleteFlag=="true" ? '<a  class="table-btn table-btn-danger" onclick="deleteLink('+row.id+')">删除</a>' : '';
+                return edit + del;
+            }
+        }];
+    var options={
+        id:"#table",
+        url:'/inform/list',
+        columns: columns,
+        toolbar: '#toolbar',
+        showRefresh: true,
+        queryParams : queryParams
+    }
+    Core.initTable(options);
+
+    /*查询参数*/
+    function queryParams(params) {
+        var temp = { //这里的键的名字和控制器的变量名必须一致，这边改动，控制器也需要改成一样的
+            limit : params.limit, //页面大小
+            offset : params.offset, //页码
+            title : $("#title").val(),
+            pubuser : $("#pubuser").val()
+        };
+        return temp;
+    }
+
+    /*编辑*/
+    function editLink(id) {
+        Core.load("#linkOpenWindow","/inform/edit?id="+id,function(){
+            $("#linkDetailModal").modal("show");
+        },2);
+    }
+    /*删除*/
+    function deleteLink(id) {
+        Core.confirm("确定删除该公告信息？",function () {
+            Core.postAjax("/inform/delete",{"id":id},function (data) {
+                if(data.status==200){
+                    Core.refreshTable("#table");
+                }
+                layer.msg(data.msg);
+            })
+        })
+    }
+    $(function () {
+        /*查询*/
+        $("#btn_query").click(function(){
+            Core.refreshTable("#table");
+        });
+        /*新增*/
+        $("#btn_add").click(function(){
+            Core.clearError("#linkForm");
+        });
+
+        /*保存*/
+        $("#saveLink").click(function(){
+            if(doValidForm("#linkForm")){
+                Core.mask("#saveLink");
+                Core.postAjax("/inform/add",$("#linkForm").serialize(),function (data) {
+                    Core.unmask("#saveLink");
+                    if(data.status==200){
+                        $("#linkModal").modal("hide");
+                        $("#linkForm")[0].reset();
+                        Core.refreshTable("#table");
+                    }
+                    layer.msg(data.msg);
+                })
+            };
+        });
+    });
+
+</script>

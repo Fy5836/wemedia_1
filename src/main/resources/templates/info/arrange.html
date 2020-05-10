@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" th:content="${@module.get('sysConfig').SITE_KWD}">
+    <meta name="description" th:content="${@module.get('sysConfig').SITE_DESC}">
+    <title th:text="${@module.get('sysConfig').SITE_NAME}"></title>
+    <link rel="stylesheet" th:href="@{/libs/bootstrap/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/libs/swiper/css/swiper.min.css}"/>
+    <link rel="stylesheet" th:href="@{/libs/font-icon/icon.css}"/>
+    <link rel="stylesheet" th:href="@{/libs/theme/laomao/css/web-common.css}"/>
+    <link rel="stylesheet" th:href="@{/libs/theme/laomao/css/web-news.css}"/>
+    <link rel="stylesheet" th:href="@{/fullcalendar/fullcalendar/fullcalendar.css}"/>
+    <link rel="stylesheet" th:href="@{/fullcalendar/fullcalendar/fullcalendar.print.css}" media="print"/>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/libs/bootstrap/bootstrap.min.js}"></script>
+    <script th:src="@{/libs/swiper/js/swiper.min.js}"></script>
+    <script th:src="@{/js/hc-sticky.js}"></script>
+    <script th:src="@{/libs/theme/laomao/js/news.js}"></script>
+    <script th:src="@{/libs/layer/layer.js}"></script>
+    <script th:src="@{/libs/iCheck/icheck.min.js}"></script>
+    <script th:src="@{/libs/validate/validate.js}"></script>
+    <script th:src="@{/fullcalendar/lib/jquery-ui.custom.min.js}"></script>
+    <script th:src="@{/fullcalendar/fullcalendar/fullcalendar.min.js}"></script>
+</head>
+<body>
+<header id="header">
+    <div th:replace="home/fragments/navbar :: navbar"></div>
+</header>
+<div class="zb-container zb-content">
+    <div class="zb-main">
+        <div class="row" style="padding-top: 15px;">
+            <div class="col-md-12">
+                <div class="box">
+                    <div class="box-body">
+                        <div id="calendar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="home/fragments/pagebar :: pageBar"></div>
+</div>
+<div th:replace="home/fragments/sidebar :: sidebar"></div>
+</div>
+<div class="return_top"><a class=" fa fa-arrow-up"></a></div>
+<script>
+    $(".modelokclose").click(function () {
+        $('#myModal').modal('hide');
+    });
+    $(document).ready(function () {
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+        $('#calendar').fullCalendar({
+            buttonText: {
+                today: '今天',
+                month: '月',
+                week: '周',
+                day: '天'
+            },
+            allDayText: '全天',
+            monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+            monthNamesShort: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+            dayNames: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
+            dayNamesShort: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,basicWeek,basicDay'
+            },
+            eventClick: function (event) {
+                var title = event.event;
+                var starttime = event.begintime;
+                var endtime = event.endtime;
+                var username = event.publishuser;
+                var des = event.detail;
+                $('#myModal .rctitle').html(title);
+                $('#myModal .rcusername').html(username);
+                $('#myModal .rcstarttime').html(starttime);
+                $('#myModal .rcendtime').html(endtime);
+                $('#myModal .rcdescription').html(des);
+                $('#myModal').modal('show');
+                console.log(event.id);
+            },
+            editable: false,
+            events: function (start, end, callback) {
+                $.ajax({
+                    url: "mycalendarload",
+                    cache: false,
+                    datatype: 'json',
+                    success: function (data) {
+                        var events = [];
+                        $.each(data, function (i, item) {
+                            console.log(item);
+                            var color = "#00c0ef";
+                            var starttime = dateformat(new Date(item.begintime));
+                            var endtime = dateformat(new Date(item.endtime));
+                            events.push({
+                                title: item.event,
+                                start: starttime,
+                                backgroundColor: color,
+                                borderColor: color,
+                                end: endtime,
+                                id: item.id,
+                                user: item.publishuser,
+                                des: item.detail
+                            });
+                        });
+                        callback(events);
+                    }
+                })
+            },
+        });
+    });
+    var dateformat = function (a) {
+        return a.getFullYear() + "-" + (a.getMonth() + 1) + "-" + a.getDate() + " " + a.getHours() + ":" + a.getMinutes() + ":" + a.getSeconds();
+    };
+</script>
+</body>
+</html>
