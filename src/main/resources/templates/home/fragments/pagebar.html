@@ -1,5 +1,4 @@
 <!--总页数超过1-->
-<!-- pageUrl：例：/*http://localhost:8881/blog/index/2*/-->
 <nav th:fragment="pageBar"  th:if="${page!=null && page.pages gt 1}" id="pageBar">
     <!--th:data-url 获取文章分类标签以及评论等分页查询接口的路径-->
     <ul class="pager page-btn" th:data-url="${#httpServletRequest.getScheme() + '://' + #httpServletRequest.getServerName() + ':' + #request.getServerPort()  + #request.getContextPath() + '/' + pageUrl}">
@@ -42,7 +41,6 @@
                     }
                 }
                 $("#pageNo").append(pageHtml);
-                /*http://localhost:8881/blog/index/2*/
                 $("#pageBar>ul a").click(function () {
                     window.location.href=$("#pageBar>ul").attr("data-url")+"/"+$(this).attr("data-page");
                 })

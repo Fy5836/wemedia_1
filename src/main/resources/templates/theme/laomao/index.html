@@ -30,7 +30,7 @@
         <form action="/"  class="form-horizontal form-search">
             <div class="form-group">
                 <div class="col-md-4 col-sm-6" style="height: 55px">
-                        <input type="text" name="keywords" class="form-control" placeholder="输入关键字" id="keywords">
+                    <input type="text" name="keywords" class="form-control" placeholder="输入关键字" id="keywords">
                 </div>
 
                 <div class="col-md-1 col-sm-6 " style="text-align:left;">
@@ -75,11 +75,11 @@
         $(".vcode").on('click', function () {
             $(this).attr('src', '/verificationCode?' + Math.floor(Math.random() * 100));
         });
-        //客户端登录
+        //公告栏展示
         $("#logMao").on('click', function () {
             $("#logModal").modal("show");
         })
-        //客户端注册
+        //校历安排展示
         $("#regMao").on('click', function () {
             $("#regModal").modal("show");
         });
