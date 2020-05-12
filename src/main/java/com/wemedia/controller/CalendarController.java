@@ -1,6 +1,6 @@
 package com.wemedia.controller;
 
-/*公告链接*/
+/*日程链接*/
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
