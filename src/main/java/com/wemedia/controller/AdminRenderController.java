@@ -81,9 +81,4 @@ public class AdminRenderController {
         return "comment/list";
     }
 
-    @GetMapping("themes")
-    public String themes(){
-        return "systheme/list";
-    }
-
 }

@@ -35,8 +35,6 @@ public class ModuleService {
                 return bizCategoryService.selectCategories(bizCategory);
             case "tagList":             //标签
                 return bizTagsService.selectTags(new BizTags());
-            case "sliderList":          //轮播文章
-                return bizArticleService.sliderList();
             case "recentList":          //最近文章
                 return bizArticleService.recentList(CoreConst.PAGE_SIZE);
             case "recommendedList":    //推荐文章

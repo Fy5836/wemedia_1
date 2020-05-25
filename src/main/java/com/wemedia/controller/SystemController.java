@@ -134,10 +134,7 @@ public class SystemController{
             //Subject——》SecurityUtils（SucurityManager）——>Realm
             Subject subject = SecurityUtils.getSubject();
             subject.login(token);
-        } catch (LockedAccountException e) {
-            token.clear();
-            return ResultUtil.error("用户已经被锁定不能登录，请联系管理员！");
-        } catch (AuthenticationException e) {
+        }  catch (AuthenticationException e) {
             token.clear();
             return ResultUtil.error("用户名或者密码错误！");
         }
