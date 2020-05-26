@@ -17,6 +17,12 @@ public class IpUtil {
             ip = request.getHeader("WL-Proxy-Client-IP");
         }
         if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             //获取ip地址
             ip = request.getRemoteAddr();
             if(ip.equals("127.0.0.1")){
