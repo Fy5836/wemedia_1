@@ -193,7 +193,7 @@ public class ArticleController {
                         + new String(attd.getAttachmentName().getBytes("UTF-8"),
                         "ISO8859-1"));
                 attachmentService.writefile(response, file);
-                return ResultUtil.error("附件下载成功");
+                return ResultUtil.success("附件下载成功");
             }else{
                 return ResultUtil.error("该文章无附件，无法下载");
             }

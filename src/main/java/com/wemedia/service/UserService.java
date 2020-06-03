@@ -1,10 +1,8 @@
 package com.wemedia.service;
 
 import com.wemedia.model.User;
-import com.wemedia.vo.UserOnlineVo;
 import com.wemedia.vo.base.ResponseVo;
 
-import java.io.Serializable;
 import java.util.List;
 
 public interface UserService {

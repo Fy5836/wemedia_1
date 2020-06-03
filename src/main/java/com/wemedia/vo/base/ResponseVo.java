@@ -1,6 +1,8 @@
 package com.wemedia.vo.base;
 
-public class ResponseVo<T> {
+public class
+
+ResponseVo<T> {
     private Integer status;
     private String msg;
     private T data;

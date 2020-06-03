@@ -6,7 +6,7 @@
 <generatorConfiguration>
     <!-- 数据库驱动包位置 -->
     <classPathEntry
-            location="E:\java\apache-maven-3.3.9\repository\mysql\mysql-connector-java\5.1.41\mysql-connector-java-5.1.41.jar"/>
+            location="D:\java\apache-maven-3.3.9\repository\mysql\mysql-connector-java\5.1.41\mysql-connector-java-5.1.41.jar"/>
     <!--<classPathEntry
             location="D:\Java\maven\repository\mysql\mysql-connector-java\5.1.28\mysql-connector-java-5.1.28.jar"/>-->
     <context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
@@ -19,7 +19,7 @@
 
         <!-- 连接 那个知道把参数改为  ${}的形式，并且用的yml的，叫我 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://101.132.103.111:3306/wemedia"
+                        connectionURL="jdbc:mysql://localhost:3306/wemedia"
                         userId="root"
                         password="123456">
         </jdbcConnection>

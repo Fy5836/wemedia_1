@@ -91,7 +91,7 @@ public class AttachmentServiceImpl extends BaseServiceImpl<Attachment> implement
         try {
             aa = new FileInputStream(file);
             sos = response.getOutputStream();
-            // 读取文件问字节码
+            // 读取文件字节码
             byte[] data = new byte[(int) file.length()];
             IOUtils.readFully(aa, data);
             // 将文件流输出到浏览器

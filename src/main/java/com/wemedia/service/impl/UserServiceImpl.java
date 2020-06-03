@@ -6,22 +6,16 @@ import com.wemedia.model.User;
 import com.wemedia.model.UserRole;
 import com.wemedia.service.UserService;
 import com.wemedia.util.ResultUtil;
-import com.wemedia.vo.UserOnlineVo;
 import com.wemedia.vo.base.ResponseVo;
-import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.cache.Cache;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.session.mgt.DefaultSessionKey;
 import org.apache.shiro.session.mgt.SessionManager;
-import org.apache.shiro.subject.SimplePrincipalCollection;
-import org.apache.shiro.subject.support.DefaultSubjectContext;
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisSessionDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.Serializable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Service
