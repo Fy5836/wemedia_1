@@ -44,7 +44,7 @@ public class ShiroService {
         filterChainDefinitionMap.put("/libs/**","anon");
         filterChainDefinitionMap.put("/favicon.ico", "anon");
         filterChainDefinitionMap.put("/verificationCode", "anon");
-        //其余url都是需要用户登录
+        //其余url一律拦截，需要验证
         filterChainDefinitionMap.put("/**", "user");
         return filterChainDefinitionMap;
     }

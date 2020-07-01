@@ -80,11 +80,11 @@ public class ShiroConfig {
         ShiroFilterFactoryBean shiroFilterFactoryBean  = new ShiroFilterFactoryBean();
         // 必须设置 SecurityManager
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        // 登录url
+        // 设置登录界面的url
         shiroFilterFactoryBean.setLoginUrl("/login");
-        // 登录成功后要跳转的链接
+        // 设置登录成功后要跳转的url
         shiroFilterFactoryBean.setSuccessUrl("/index");
-        //未授权界面;
+        //设置无权限时跳转的url
         shiroFilterFactoryBean.setUnauthorizedUrl("/error/403");
         //拦截器过滤链.
         Map<String,String> filterChainDefinitionMap = shiroService.loadFilterChainDefinitions();

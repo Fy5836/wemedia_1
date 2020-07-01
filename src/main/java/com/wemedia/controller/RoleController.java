@@ -9,7 +9,6 @@ import com.wemedia.service.PermissionService;
 import com.wemedia.service.RoleService;
 import com.wemedia.shiro.MyShiroRealm;
 import com.wemedia.util.CoreConst;
-import com.wemedia.util.PageUtil;
 import com.wemedia.util.ResultUtil;
 import com.wemedia.vo.PermissionTreeListVo;
 import com.wemedia.vo.base.PageResultVo;

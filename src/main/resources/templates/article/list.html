@@ -109,19 +109,8 @@
                 }
                 return tagHtml;
             }
-        },{
-            field: 'slider',
-            title: '轮播',
-            align : "center",
-
-            formatter : function(value) {
-                if(value){
-                    return '是'
-                }else{
-                    return '否'
-                }
-            }
-        },{
+        },
+        {
             field: 'top',
             title: '置顶',
             align : "center",
@@ -172,8 +161,7 @@
             title : '操作',
             align : "center",
             class:'min-width-100',
-            formatter : function(value,
-                                 row, index) {
+            formatter : function(value, row, index) {
                 var edit = editFlag=="true" ? '<a class="table-btn table-btn-info" onclick="editArticle('+row.id+')">编辑</a>' : '';
                 var del = deleteFlag=="true" ? '<a  class="table-btn table-btn-danger" onclick="deleteArticle('+row.id+')">删除</a>' : '';
                 var up = upFlag=="true" ? '<a class="table-btn table-btn-success" onclick="upArticle('+row.id+')">上传附件</a>' : '';

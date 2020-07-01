@@ -13,7 +13,9 @@ public class CoreUtils {
         T dest = null;
         try {
             if (notNull(orig)) {
+                //默认调用无参构造函数进行实例化
                 dest = clazz.newInstance();
+                //拷贝java对象
                 PropertyUtils.copyProperties(dest, orig);
             }
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {

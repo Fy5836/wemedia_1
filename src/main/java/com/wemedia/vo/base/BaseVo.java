@@ -13,7 +13,6 @@ public abstract class BaseVo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private Date createTime;
     private Date updateTime;
 

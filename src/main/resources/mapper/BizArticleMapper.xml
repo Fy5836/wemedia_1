@@ -163,12 +163,6 @@
 			</when>
 			<otherwise>
 				ORDER BY
-				<if test="sliderFlag == true">
-					a.slider DESC,
-				</if>
-				<if test="recentFlag != true">
-				a.top DESC,
-				</if>
 				a.create_time DESC
 			</otherwise>
 		</choose>

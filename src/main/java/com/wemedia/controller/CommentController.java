@@ -7,7 +7,6 @@ import com.wemedia.model.User;
 import com.wemedia.service.BizCommentService;
 import com.wemedia.util.CoreConst;
 import com.wemedia.util.IpUtil;
-import com.wemedia.util.PageUtil;
 import com.wemedia.util.ResultUtil;
 import com.wemedia.vo.CommentConditionVo;
 import com.wemedia.vo.base.PageResultVo;
